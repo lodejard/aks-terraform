@@ -1,0 +1,68 @@
+prometheusOperator:
+  nodeSelector:
+    beta.kubernetes.io/os: linux
+
+prometheus:
+  prometheusSpec:
+    nodeSelector:
+      beta.kubernetes.io/os: linux
+    ruleSelectorNilUsesHelmValues: false # find all rules by default
+    serviceMonitorSelectorNilUsesHelmValues: false # find all service monitors by default
+    # {{# if remoteWrite.enabled }}
+    # remoteWrite:
+    # - url: "{{ remoteWrite.url }}"
+    # {{/ if }}
+    externalLabels:
+      # cluster: "{{ ../cluster.name }}"
+      # zone: "{{ ../cluster.location }}"
+      # boundary: "{{ ../cluster.boundary }}"
+      # cloud: "{{ ../cluster.cloud }}"
+      # environment: "{{ ../cluster.environment }}"
+      # orchestrator: "{{ ../cluster.orchestrator }}"
+  ingress:
+    enabled: false
+    # annotations:
+    #   kubernetes.io/ingress.class: nginx
+    #   external-dns.alpha.kubernetes.io/target: ingress.{{ ../domainProfile.dnsPrefix }}.{{ ../domainProfile.zoneName }}
+    #   certmanager.k8s.io/cluster-issuer: letsencrypt
+    # hosts:
+    # - prometheus.metrics.{{ ../domainProfile.dnsPrefix }}.{{ ../domainProfile.zoneName }}
+    # tls:
+    # - secretName: prometheus-general-tls
+    #   hosts:
+    #   - ingress.{{ ../domainProfile.dnsPrefix }}.{{ ../domainProfile.zoneName }}
+    #   - prometheus.metrics.{{ ../domainProfile.dnsPrefix }}.{{ ../domainProfile.zoneName }}
+
+kube-state-metrics:
+  nodeSelector:
+    beta.kubernetes.io/os: linux
+
+prometheus-node-exporter:
+  nodeSelector:
+    beta.kubernetes.io/os: linux
+
+alertmanager:
+  alertmanagerSpec:
+    nodeSelector:
+      beta.kubernetes.io/os: linux
+
+grafana:
+  nodeSelector:
+    beta.kubernetes.io/os: linux
+  # ingress:
+  #   enabled: true
+  #   annotations:
+  #     kubernetes.io/ingress.class: nginx
+  #     external-dns.alpha.kubernetes.io/target: ingress.{{ ../domainProfile.dnsPrefix }}.{{ ../domainProfile.zoneName }}
+  #     certmanager.k8s.io/cluster-issuer: letsencrypt
+  #   hosts:
+  #   - grafana.metrics.{{ ../domainProfile.dnsPrefix }}.{{ ../domainProfile.zoneName }}
+  #   tls:
+  #   - secretName: prometheus-operator-grafana-tls
+  #     hosts:
+  #     - ingress.{{ ../domainProfile.dnsPrefix }}.{{ ../domainProfile.zoneName }}
+  #     - grafana.metrics.{{ ../domainProfile.dnsPrefix }}.{{ ../domainProfile.zoneName }}
+
+kubelet:
+  serviceMonitor:
+    https: false # the authentication needed secure port isn't working
